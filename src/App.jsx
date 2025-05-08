@@ -8,46 +8,70 @@ import { addImage, clearImages } from './redux/imgSlice';
 function App() {
   
   // for state-managment
+  // for calling actions / dispatching actions of imageSlice
   const dispatch = useDispatch();
   // it accesses the imageList from the redux-store's images state
-  const { imageList } = useSelector((state) => state.images);
+  const { imageList } = useSelector((state) => state.images); // to read data from state/slice
 
   // loading state
   const [loading, setLoading] = useState(false);
 
   // functin for handling images
   const handleImage = async (e) => {
+    // takes first files/img from uploaded image
     const file = e.target.files[0];
+    // if no img -> simply return
     if (!file) return;
-
+    
+    // for showing loading
     setLoading(true);
 
-    // Simulate processing and resizing to 512x512
+    // converting file/img to temporary url as initial
     const originalUrl = URL.createObjectURL(file);
 
     // resieze - images inti 512 * 512
+    // after converting / this is url of updated img
     const processedUrl = await resizeImage(file, 512, 512);
+
+    // calling addImage funtion to show on UI 
+    // and Storing before & after img in redux-store i.e store
     dispatch(addImage({ original: originalUrl, processed: processedUrl }));
 
-    // at end set loading -> false
+    // at end set after complting set loading -> false
     setLoading(false);
   };
 
   // fn for resize image
   const resizeImage = (file, maxWidth, maxHeight) =>
+    // return promise
     new Promise((resolve) => {
+      // create image object 
       const img = new Image();
+      // convert img/file into temp url 
       img.src = URL.createObjectURL(file);
+      // after uploading img then
       img.onload = () => {
+
+        // making canvas image & resize img after draw in it
         const canvas = document.createElement("canvas");
+
+        // assign values
         canvas.width = maxWidth;
         canvas.height = maxHeight;
+
+        // taking 2d drwing context of canvas
         const ctx = canvas.getContext("2d");
+        
+        // drawing org img on canvas but with new values
         ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+
+        // converting canvas'img into binary file format 
         canvas.toBlob((blob) => {
+          // converting blob to temp url
           const url = URL.createObjectURL(blob);
+          // sending resized images 
           resolve(url);
-        }, "image/png");
+        }, "image/png"); //output img will be in png-formate
       };
     });
 
