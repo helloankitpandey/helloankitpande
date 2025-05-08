@@ -6,6 +6,7 @@ import { useState } from "react";
 import { addImage, clearImages } from './redux/imgSlice';
 
 function App() {
+  
   // for state-managment
   const dispatch = useDispatch();
   // it accesses the imageList from the redux-store's images state
@@ -24,7 +25,7 @@ function App() {
     // Simulate processing and resizing to 512x512
     const originalUrl = URL.createObjectURL(file);
 
-    // resieze - images
+    // resieze - images inti 512 * 512
     const processedUrl = await resizeImage(file, 512, 512);
     dispatch(addImage({ original: originalUrl, processed: processedUrl }));
 
@@ -52,15 +53,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-50 p-6 sm:p-10">
-      <div className ="flex bg-amber-500 justify-items-center align-middle justify-center py-3 px-1 text-2xl my-1 mx-2 italic font-medium  ">
+      {/* <div className ="flex bg-amber-500 justify-items-center align-middle justify-center py-3 px-1 text-2xl my-1 mx-2 italic font-medium  ">
         Build By Ankit Pandey 
-      </div>
-      <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-pink-600 to-red-500 text-transparent bg-clip-text mb-10 drop-shadow">
-        Image Resize Processor
+      </div> */}
+      <h1 className="text-4xl font-bold text-center bg-gradient-to-r text-black  bg-clip-text mb-10 drop-shadow">
+        Image Processor
       </h1>
 
       <div className="flex justify-center mb-8 gap-4 flex-wrap">
-        <label className="cursor-pointer bg-white border-2 border-dashed border-blue-400 p-6 rounded-xl shadow-md hover:bg-blue-50 transition-all">
+        <label className="cursor-pointer bg-white border-2 border-dashed border-blue-400 p-3 rounded-xl shadow-md hover:bg-blue-50 transition-all">
           <input
             type="file"
             accept="image/*"
@@ -68,18 +69,19 @@ function App() {
             className="hidden"
           />
           <span className="text-blue-600 font-medium text-lg">
-            📤 Click to Upload Image
+            Click to Upload Image
           </span>
         </label>
 
         <button
           onClick={() => dispatch(clearImages())}
-          className="bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600"
+          className="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600"
         >
-          🗑️ Clear All
+           Clear All
         </button>
       </div>
 
+      {/* if loading */}
       {loading && (
         <p className="text-center text-blue-700 font-semibold mb-4">
           Processing Image...
@@ -116,7 +118,7 @@ function App() {
                 download={`processed-${idx + 1}.png`}
                 className="block mt-4 text-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
               >
-                ⬇️ You can Download Image here
+                You can Download Image here
               </a>
             </div>
           </div>
